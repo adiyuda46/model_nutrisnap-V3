@@ -11,9 +11,12 @@ from PIL import Image
 #init Flask
 app = Flask(__name__)
 
-
+print("TensorFlow version:", tf.__version__)
+print("Keras version:", tf.keras.__version__)
 #n get file model & lebel class
-MODEL_PATH  = "my_model_2.keras"
+# MODEL_PATH  = "MyModel (3).keras"
+MODEL_PATH  = "MyModel (4).keras"
+# MODEL_PATH  = "my_model_2.keras"
 LABELS_PATH = "class_names.txt"
 
 # Load model
@@ -105,6 +108,11 @@ def predict():
         top_idx = int(np.argmax(probs))
         label = class_names[top_idx]
         confidence = float(probs[top_idx])
+
+        # 🔥 Tambahkan aturan: jika confidence < 0.8 → tidak dikenali
+        print("confidence : ",confidence)
+        if confidence <= 0.12:
+            return jsonify({"error": "Buah tidak dikenali"}), 400
 
         return jsonify({
             "label": label,
